@@ -2,7 +2,7 @@
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong sharedPushLock,byte *token_user_info_class,
-                      byte *param_5,longlong *param_6)
+                      byte *token_origin_info_class,longlong *param_6)
 
 {
   uint uVar1;
@@ -23,19 +23,19 @@ void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong sharedPushLock
   local_88 = param_2;
   uVar1 = RtlLengthSid(token_user_info_class);
   BfsUpdateHash(token_user_info_class,uVar1,&local_98);
-  uVar1 = RtlLengthSid(param_5);
-  BfsUpdateHash(param_5,uVar1,&local_98);
+  uVar1 = RtlLengthSid(token_origin_info_class);
+  BfsUpdateHash(token_origin_info_class,uVar1,&local_98);
   uVar3 = BfsFinalHash(&local_98);
   *param_6 = 0;
   KeEnterCriticalRegion();
   ExAcquirePushLockSharedEx(sharedPushLock,0);
-  lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,param_5);
+  lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,token_origin_info_class);
   local_90 = lVar4;
   if ((lVar4 == 0) || ((*(uint *)(lVar4 + 0x38) & 0x10000000) == 0)) {
     ExReleasePushLockSharedEx(sharedPushLock,0);
     KeLeaveCriticalRegion();
     iVar2 = BfsInsertPolicyEntry
-                      (param_1,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)param_5,&local_90)
+                      (param_1,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)token_origin_info_class,&local_90)
     ;
     if (iVar2 < 0) {
       if (3 < .data) {
