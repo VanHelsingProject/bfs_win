@@ -9,16 +9,16 @@ void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong param_3,byte *
   int iVar2;
   undefined8 uVar3;
   longlong lVar4;
-  undefined1 auStackY_d8 [32];
+  undefined1 securityCookiePadding [32];
   longlong local_98;
   longlong local_90;
   undefined8 local_88;
   longlong *local_60;
   undefined4 local_58;
   undefined4 local_54;
-  ulonglong local_50;
+  ulonglong cookie_check ;
   
-  local_50 = __security_cookie ^ (ulonglong)auStackY_d8;
+  cookie_check  = __security_cookie ^ (ulonglong)securityCookiePadding;
   local_98 = 0;
   local_88 = param_2;
   uVar1 = RtlLengthSid(param_4);
@@ -76,7 +76,7 @@ LAB_00005fa7:
   UNLOCK();
   *param_6 = local_90;
 LAB_00005fd5:
-  __security_check_cookie(local_50 ^ (ulonglong)auStackY_d8);
+  __security_check_cookie(cookie_check  ^ (ulonglong)securityCookiePadding);
   return;
 }
 
