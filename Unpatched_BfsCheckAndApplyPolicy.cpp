@@ -4,14 +4,14 @@ void BfsCheckAndApplyPolicy
                longlong *param_5)
 
 {
-  uint uVar1;
+  uint statusCode_garbage_collector;
   byte isBfsEntryExist;
   uint nt_status_var1;
   ushort *file_name;
-  undefined8 uVar2;
+  undefined8 bfs_func_status;
   longlong PolicyEntry;
   undefined1 securityCookiePadding [32];
-  uint local_e8;
+  uint statusCode_garbage;
   char isTokenCapable;
   char local_e3 [3];
   longlong deferredPolicyEntry;
@@ -21,12 +21,12 @@ void BfsCheckAndApplyPolicy
   dword *tempAccessToken;
   longlong deferredFileNameInfo;
   undefined8 local_b0;
-  undefined8 uStack_a8;
+  undefined8 garbage_variable_1;
   undefined8 local_a0;
-  undefined8 uStack_98;
+  undefined8 filename_buffer;
   ushort file_name_unicode_array [24];
-  uint *local_60;
-  undefined8 local_58;
+  uint *statusCode_garbage_collector_2;
+  undefined8 etw_write_related_code;
   ulonglong cookie_check;
   longlong fileNameInfo_local_var;
   dword *temp_saver_pointer;
@@ -38,14 +38,14 @@ void BfsCheckAndApplyPolicy
   file_name_info = 0;
   token_origin_info_class = (PVOID *)0x0;
   local_b0 = 0;
-  uStack_a8 = 0;
+  garbage_variable_1 = 0;
   temp_saver_pointer = access_token;
   nt_status_var1 = SeQueryInformationToken(access_token,1,&token_user_info_class);
-  uVar1 = local_e8;
+  statusCode_garbage_collector = statusCode_garbage;
   if ((-1 < (int)nt_status_var1) &&
      (temp_saver_pointer = access_token,
      nt_status_var1 = SeQueryInformationToken(access_token,0x1f,&token_origin_info_class),
-     uVar1 = local_e8, -1 < (int)nt_status_var1)) {
+     statusCode_garbage_collector = statusCode_garbage, -1 < (int)nt_status_var1)) {
     nt_status_var1 = FltGetFileNameInformation(flt_callback_data,0x101,&file_name_info);
     if (nt_status_var1 == 0xc0000201) {
       deferredFileNameInfo = 0;
@@ -57,7 +57,7 @@ void BfsCheckAndApplyPolicy
       file_name_info = deferredFileNameInfo;
     }
     temp_saver_pointer = (dword *)(ulonglong)nt_status_var1;
-    uVar1 = local_e8;
+    statusCode_garbage_collector = statusCode_garbage;
     if (-1 < (int)nt_status_var1) {
       isBfsEntryExist =
            BfsPolicyEntryExists
@@ -65,13 +65,13 @@ void BfsCheckAndApplyPolicy
                       (byte *)*token_origin_info_class);
       if (isBfsEntryExist == 0) {
         temp_saver_pointer = (dword *)&gBfsPolicyTable;
-        uVar2 = BfsGetNotPresentPolicyEntry
+        bfs_func_status = BfsGetNotPresentPolicyEntry
                           (0x16200,(byte *)*token_user_info_class,(byte *)*token_origin_info_class,
                            &deferredPolicyEntry);
         PolicyEntry = deferredPolicyEntry;
-        nt_status_var1 = (uint)uVar2;
-        uVar1 = local_e8;
-        if ((int)(uint)uVar2 < 0) goto joined_r0x00004c71;
+        nt_status_var1 = (uint)bfs_func_status;
+        statusCode_garbage_collector = statusCode_garbage;
+        if ((int)(uint)bfs_func_status < 0) goto joined_r0x00004c71;
 LAB_00004b82:
         isTokenCapable = '\0';
         temp_saver_pointer = (dword *)0x0;
@@ -96,16 +96,16 @@ LAB_00004d54:
             UNLOCK();
             *(uint *)*param_5 = *(uint *)*param_5 | 1;
             PolicyEntry = deferredPolicyEntry;
-            uVar1 = local_e8;
+            statusCode_garbage_collector = statusCode_garbage;
             goto LAB_00004d94;
           }
           temp_saver_pointer = &IMAGE_NT_HEADERS64_000000f0.FileHeader.NumberOfSymbols;
           fileNameInfo_local_var = ExAllocatePool2(0x100,0x58,0x43736642);
           *param_5 = fileNameInfo_local_var;
           if (fileNameInfo_local_var != 0) goto LAB_00004d54;
-          uVar1 = local_e8;
+          statusCode_garbage_collector = statusCode_garbage;
           if (.data < 4) goto LAB_00004d94;
-          local_e8 = 0xc0000017;
+          statusCode_garbage = 0xc0000017;
         }
         else {
           if (isTokenCapable == '\0') goto LAB_00004ceb;
@@ -122,7 +122,7 @@ LAB_00004c37:
                                    (byte *)*token_origin_info_class,&deferredPolicyEntry);
             PolicyEntry = deferredPolicyEntry;
             temp_saver_pointer = param_1;
-            uVar1 = local_e8;
+            statusCode_garbage_collector = statusCode_garbage;
             if ((int)nt_status_var1 < 0) goto joined_r0x00004c71;
           }
           else if (*(int *)(PolicyEntry + 0x38) == 2) {
@@ -137,34 +137,34 @@ LAB_00004cb8:
                          ((longlong)flt_callback_data,(longlong)access_token,file_name_info,
                           PolicyEntry,param_5);
           temp_saver_pointer = flt_callback_data;
-          uVar1 = local_e8;
+          statusCode_garbage_collector = statusCode_garbage;
           if (-1 < (int)nt_status_var1) goto LAB_00004d94;
 LAB_00004bd8:
-          uVar1 = local_e8;
-          local_e8 = nt_status_var1;
+          statusCode_garbage_collector = statusCode_garbage;
+          statusCode_garbage = nt_status_var1;
           if (.data < 4) goto LAB_00004d94;
         }
-        local_60 = &local_e8;
-        local_58 = 4;
+        statusCode_garbage_collector_2 = &statusCode_garbage;
+        etw_write_related_code = 4;
         _tlgWriteTransfer_EtwWriteTransfer(temp_saver_pointer,&DAT_00013c91);
-        uVar1 = local_e8;
+        statusCode_garbage_collector = statusCode_garbage;
       }
       else {
         temp_saver_pointer = param_1;
         nt_status_var1 =
              BfsGetPolicyEntry(param_1,param_2,0x16200,(byte *)*token_user_info_class,
                                (byte *)*token_origin_info_class,&deferredPolicyEntry);
-        uVar1 = local_e8;
+        statusCode_garbage_collector = statusCode_garbage;
         if ((int)nt_status_var1 < 0) {
 joined_r0x00004c71:
-          local_e8 = nt_status_var1;
+          statusCode_garbage = nt_status_var1;
           PolicyEntry = deferredPolicyEntry;
           if (3 < .data) {
-            local_58 = 4;
-            local_60 = &local_e8;
+            etw_write_related_code = 4;
+            statusCode_garbage_collector_2 = &statusCode_garbage;
             _tlgWriteTransfer_EtwWriteTransfer(temp_saver_pointer,&DAT_00013c91);
             PolicyEntry = deferredPolicyEntry;
-            uVar1 = local_e8;
+            statusCode_garbage_collector = statusCode_garbage;
           }
         }
         else {
@@ -172,43 +172,43 @@ joined_r0x00004c71:
           file_name = BfsGetFileName(file_name_unicode_array,file_name_info);
           PolicyEntry = deferredPolicyEntry;
           local_a0 = *(undefined8 *)file_name;
-          uStack_98 = *(undefined8 *)(file_name + 4);
+          filename_buffer = *(undefined8 *)(file_name + 4);
           nt_status_var1 =
                BfsGetPolicy(*(longlong *)(deferredPolicyEntry + 0x30),
                             (ushort *)(fileNameInfo_local_var + 0x18),&local_a0);
           if (nt_status_var1 == 0) goto LAB_00004b82;
           if (nt_status_var1 == 1) goto LAB_00004cb8;
-          uVar1 = local_e8;
+          statusCode_garbage_collector = statusCode_garbage;
           if (nt_status_var1 == 2) {
-            uVar2 = BfsQueryAccessOnly((*(uint *)(*(longlong *)(flt_callback_data + 4) + 0x20) & 1)
+            bfs_func_status = BfsQueryAccessOnly((*(uint *)(*(longlong *)(flt_callback_data + 4) + 0x20) & 1)
                                        + 1,(longlong)flt_callback_data);
-            if ((char)uVar2 != '\0') goto LAB_00004cb8;
-            uVar2 = BfsQueryAccessOnly((*(uint *)(*(longlong *)(flt_callback_data + 4) + 0x20) & 1)
+            if ((char)bfs_func_status != '\0') goto LAB_00004cb8;
+            bfs_func_status = BfsQueryAccessOnly((*(uint *)(*(longlong *)(flt_callback_data + 4) + 0x20) & 1)
                                        + 1,(longlong)flt_callback_data);
-            uVar1 = local_e8;
-            if ((char)uVar2 == '\0') goto LAB_00004ceb;
+            statusCode_garbage_collector = statusCode_garbage;
+            if ((char)bfs_func_status == '\0') goto LAB_00004ceb;
           }
         }
       }
 LAB_00004d94:
-      local_e8 = uVar1;
-      uVar1 = local_e8;
+      statusCode_garbage = statusCode_garbage_collector;
+      statusCode_garbage_collector = statusCode_garbage;
       if (PolicyEntry != 0) {
         BfsDereferencePolicyEntryEx(PolicyEntry,'\0');
-        uVar1 = local_e8;
+        statusCode_garbage_collector = statusCode_garbage;
       }
       goto LAB_00004da3;
     }
   }
-  local_e8 = nt_status_var1;
+  statusCode_garbage = nt_status_var1;
   if (3 < .data) {
-    local_60 = &local_e8;
-    local_58 = 4;
+    statusCode_garbage_collector_2 = &statusCode_garbage;
+    etw_write_related_code = 4;
     _tlgWriteTransfer_EtwWriteTransfer(temp_saver_pointer,&DAT_00013c91);
-    uVar1 = local_e8;
+    statusCode_garbage_collector = statusCode_garbage;
   }
 LAB_00004da3:
-  local_e8 = uVar1;
+  statusCode_garbage = statusCode_garbage_collector;
   if (file_name_info != 0) {
     FltReleaseFileNameInformation();
   }
