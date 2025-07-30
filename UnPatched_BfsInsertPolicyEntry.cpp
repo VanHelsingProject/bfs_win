@@ -2,8 +2,8 @@
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void BfsInsertPolicyEntry
-               (dword *param_1,undefined8 param_2,longlong param_3,undefined8 param_4,
-               longlong param_5,longlong param_6,longlong *param_7)
+               (dword *param_1,undefined8 param_2,longlong sharedPushLock,undefined8 param_4,
+               longlong token_user_info_class,longlong param_6,longlong *param_7)
 
 {
   longlong *plVar1;
@@ -38,7 +38,7 @@ void BfsInsertPolicyEntry
   
   local_50 = __security_cookie ^ (ulonglong)auStackY_118;
   lVar10 = 0;
-  local_d0 = param_5;
+  local_d0 = token_user_info_class;
   local_c8 = param_6;
   bVar5 = false;
   local_90 = 0;
@@ -55,9 +55,9 @@ void BfsInsertPolicyEntry
   local_c0 = param_4;
   local_b0 = param_1;
   KeEnterCriticalRegion();
-  ExAcquirePushLockExclusiveEx(param_3,0);
-  uVar12 = *(ulonglong *)(param_3 + 8);
-  lVar8 = BfsLookupPolicyEntryHashTable(uVar12,local_c0,param_5,param_6);
+  ExAcquirePushLockExclusiveEx(sharedPushLock,0);
+  uVar12 = *(ulonglong *)(sharedPushLock + 8);
+  lVar8 = BfsLookupPolicyEntryHashTable(uVar12,local_c0,token_user_info_class,param_6);
   if (lVar8 == 0) {
     lVar9 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(local_d0 + 1) * 4 + 8,0x53736642);
     if ((lVar9 == 0) ||
@@ -100,24 +100,24 @@ LAB_0000688e:
           *(undefined2 *)(lVar8 + 0x82) = 0;
           *(undefined8 *)(lVar8 + 0x88) = 0;
           KeInitializeEvent(lVar11,0,0);
-          uVar12 = *(ulonglong *)(param_3 + 8);
+          uVar12 = *(ulonglong *)(sharedPushLock + 8);
           uVar7 = BfsInsertEntryHashTable(uVar12,local_c0,lVar8);
           if (-1 < (int)uVar7) {
             LOCK();
             *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
             UNLOCK();
-            plVar1 = (longlong *)(param_3 + 0x10);
+            plVar1 = (longlong *)(sharedPushLock + 0x10);
             local_d8 = '\x01';
             if ((longlong *)*plVar1 == plVar1) {
-              ExSetTimer(*(undefined8 *)(param_3 + 0x20),0xffffffffee1e5d00,300000000);
+              ExSetTimer(*(undefined8 *)(sharedPushLock + 0x20),0xffffffffee1e5d00,300000000);
             }
-            puVar2 = *(undefined8 **)(param_3 + 0x18);
+            puVar2 = *(undefined8 **)(sharedPushLock + 0x18);
             plVar3 = (longlong *)(lVar8 + 0x40);
             if ((longlong *)*puVar2 != plVar1) goto LAB_00006d58;
             *plVar3 = (longlong)plVar1;
             *(undefined8 **)(lVar8 + 0x48) = puVar2;
             *puVar2 = plVar3;
-            *(longlong **)(param_3 + 0x18) = plVar3;
+            *(longlong **)(sharedPushLock + 0x18) = plVar3;
             LOCK();
             *(undefined8 *)(lVar8 + 0x60) = _DAT_fffff78000000014;
             UNLOCK();
@@ -136,7 +136,7 @@ LAB_00006876:
       }
     }
 LAB_00006bb9:
-    ExReleasePushLockExclusiveEx(param_3);
+    ExReleasePushLockExclusiveEx(sharedPushLock);
     KeLeaveCriticalRegion();
     bVar5 = false;
     bVar6 = false;
@@ -148,11 +148,11 @@ LAB_00006beb:
       }
       if (local_d8 != '\0') {
         KeEnterCriticalRegion();
-        ExAcquirePushLockExclusiveEx(param_3,0);
+        ExAcquirePushLockExclusiveEx(sharedPushLock,0);
         lVar8 = BfsLookupPolicyEntryHashTable
-                          (*(undefined8 *)(param_3 + 8),local_c0,local_d0,local_c8);
+                          (*(undefined8 *)(sharedPushLock + 8),local_c0,local_d0,local_c8);
         if (lVar8 == 0) {
-          ExReleasePushLockExclusiveEx(param_3,0);
+          ExReleasePushLockExclusiveEx(sharedPushLock,0);
           KeLeaveCriticalRegion();
         }
         else {
@@ -175,7 +175,7 @@ LAB_00006d58:
             *plVar1 = 0;
             *(undefined8 *)(lVar8 + 0x48) = 0;
           }
-          ExReleasePushLockExclusiveEx(param_3);
+          ExReleasePushLockExclusiveEx(sharedPushLock);
           KeLeaveCriticalRegion();
           KeSetEvent(*(undefined8 *)(lVar8 + 0x28),0,0);
           BfsDereferencePolicyEntryEx(lVar8,'\0');
@@ -211,7 +211,7 @@ LAB_00006d58:
       *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
       UNLOCK();
 LAB_00006a67:
-      ExReleasePushLockExclusiveEx(param_3,0);
+      ExReleasePushLockExclusiveEx(sharedPushLock,0);
       KeLeaveCriticalRegion();
       pdVar14 = local_a0;
       uVar7 = RtlConvertSidToUnicodeString(pdVar14,local_d0,1);
@@ -230,7 +230,7 @@ LAB_00006a67:
             RtlFreeUnicodeString(local_a0);
             RtlFreeUnicodeString(&local_90);
             KeEnterCriticalRegion();
-            ExAcquirePushLockExclusiveEx(param_3);
+            ExAcquirePushLockExclusiveEx(sharedPushLock);
             *(undefined8 *)(lVar8 + 0x30) = local_a8;
             *(undefined4 *)(lVar8 + 0x38) = 0x10000000;
             KeSetEvent(*(undefined8 *)(lVar8 + 0x28),0,0);
@@ -250,7 +250,7 @@ LAB_00006a67:
     LOCK();
     *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
     UNLOCK();
-    ExReleasePushLockExclusiveEx(param_3);
+    ExReleasePushLockExclusiveEx(sharedPushLock);
     KeLeaveCriticalRegion();
     if (*(int *)(lVar8 + 0x38) == 0x10000001) {
       uVar13 = *(undefined8 *)(lVar8 + 0x28);
