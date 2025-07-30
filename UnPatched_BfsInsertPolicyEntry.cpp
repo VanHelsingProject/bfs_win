@@ -3,7 +3,7 @@
 
 void BfsInsertPolicyEntry
                (dword *param_1,undefined8 param_2,longlong sharedPushLock,undefined8 param_4,
-               longlong token_user_info_class,longlong param_6,longlong *param_7)
+               longlong token_user_info_class,longlong token_origin_info_class,longlong *param_7)
 
 {
   longlong *plVar1;
@@ -39,7 +39,7 @@ void BfsInsertPolicyEntry
   local_50 = __security_cookie ^ (ulonglong)auStackY_118;
   lVar10 = 0;
   local_d0 = token_user_info_class;
-  local_c8 = param_6;
+  local_c8 = token_origin_info_class;
   bVar5 = false;
   local_90 = 0;
   uStack_88 = 0;
@@ -57,11 +57,11 @@ void BfsInsertPolicyEntry
   KeEnterCriticalRegion();
   ExAcquirePushLockExclusiveEx(sharedPushLock,0);
   uVar12 = *(ulonglong *)(sharedPushLock + 8);
-  lVar8 = BfsLookupPolicyEntryHashTable(uVar12,local_c0,token_user_info_class,param_6);
+  lVar8 = BfsLookupPolicyEntryHashTable(uVar12,local_c0,token_user_info_class,token_origin_info_class);
   if (lVar8 == 0) {
     lVar9 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(local_d0 + 1) * 4 + 8,0x53736642);
     if ((lVar9 == 0) ||
-       (lVar10 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(param_6 + 1) * 4 + 8,0x53736642),
+       (lVar10 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(token_origin_info_class + 1) * 4 + 8,0x53736642),
        lVar10 == 0)) goto LAB_00006876;
     uVar12 = (ulonglong)((uint)*(byte *)(local_d0 + 1) * 4 + 8);
     uVar7 = RtlCopySid(uVar12,lVar9,local_d0);
