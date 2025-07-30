@@ -3,7 +3,7 @@
 
 void BfsInsertPolicyEntry
                (dword *param_1,undefined8 param_2,longlong sharedPushLock,undefined8 param_4,
-               longlong token_user_info_class,longlong token_origin_info_class,longlong *param_7)
+               longlong token_user_info_class,longlong token_origin_info_class,longlong *policyEntryObject_frmArgs)
 
 {
   longlong *plVar1;
@@ -13,7 +13,7 @@ void BfsInsertPolicyEntry
   bool bVar5;
   bool bVar6;
   uint uVar7;
-  longlong lVar8;
+  longlong pagedPool_policyEntryObject;
   longlong lVar9;
   longlong lVar10;
   longlong lVar11;
@@ -57,8 +57,8 @@ void BfsInsertPolicyEntry
   KeEnterCriticalRegion();
   ExAcquirePushLockExclusiveEx(sharedPushLock,0);
   uVar12 = *(ulonglong *)(sharedPushLock + 8);
-  lVar8 = BfsLookupPolicyEntryHashTable(uVar12,local_c0,token_user_info_class,token_origin_info_class);
-  if (lVar8 == 0) {
+  pagedPool_policyEntryObject = BfsLookupPolicyEntryHashTable(uVar12,local_c0,token_user_info_class,token_origin_info_class);
+  if (pagedPool_policyEntryObject == 0) {
     lVar9 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(local_d0 + 1) * 4 + 8,0x53736642);
     if ((lVar9 == 0) ||
        (lVar10 = ExAllocatePool2(0x100,(ulonglong)*(byte *)(token_origin_info_class + 1) * 4 + 8,0x53736642),
@@ -79,32 +79,32 @@ LAB_0000688e:
       uVar12 = (ulonglong)((uint)*(byte *)(local_c8 + 1) * 4 + 8);
       uVar7 = RtlCopySid(uVar12,lVar10,local_c8);
       if ((int)uVar7 < 0) goto LAB_0000690c;
-      lVar8 = ExAllocatePool2(0x100,0x98,0x45736642);
-      if (lVar8 != 0) {
+      pagedPool_policyEntryObject = ExAllocatePool2(0x100,0x98,0x45736642);
+      if (pagedPool_policyEntryObject != 0) {
         LOCK();
-        *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
+        *(int *)(pagedPool_policyEntryObject + 0x90) = *(int *)(pagedPool_policyEntryObject + 0x90) + 1;
         UNLOCK();
         lVar11 = ExAllocatePool2(0x40,0x18,0x76736642);
-        *(longlong *)(lVar8 + 0x28) = lVar11;
+        *(longlong *)(pagedPool_policyEntryObject + 0x28) = lVar11;
         if (lVar11 != 0) {
-          *(longlong *)(lVar8 + 0x18) = lVar9;
-          *(longlong *)(lVar8 + 0x20) = lVar10;
-          *(undefined4 *)(lVar8 + 0x38) = 0x10000001;
-          *(undefined4 *)(lVar8 + 0x68) = 0;
-          *(undefined8 *)(lVar8 + 0x70) = 0;
-          *(undefined8 *)(lVar8 + 0x78) = 0;
-          *(undefined2 *)(lVar8 + 0x72) = 0;
-          *(undefined8 *)(lVar8 + 0x78) = 0;
-          *(undefined8 *)(lVar8 + 0x80) = 0;
-          *(undefined8 *)(lVar8 + 0x88) = 0;
-          *(undefined2 *)(lVar8 + 0x82) = 0;
-          *(undefined8 *)(lVar8 + 0x88) = 0;
+          *(longlong *)(pagedPool_policyEntryObject + 0x18) = lVar9;
+          *(longlong *)(pagedPool_policyEntryObject + 0x20) = lVar10;
+          *(undefined4 *)(pagedPool_policyEntryObject + 0x38) = 0x10000001;
+          *(undefined4 *)(pagedPool_policyEntryObject + 0x68) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x70) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x78) = 0;
+          *(undefined2 *)(pagedPool_policyEntryObject + 0x72) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x78) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x80) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x88) = 0;
+          *(undefined2 *)(pagedPool_policyEntryObject + 0x82) = 0;
+          *(undefined8 *)(pagedPool_policyEntryObject + 0x88) = 0;
           KeInitializeEvent(lVar11,0,0);
           uVar12 = *(ulonglong *)(sharedPushLock + 8);
-          uVar7 = BfsInsertEntryHashTable(uVar12,local_c0,lVar8);
+          uVar7 = BfsInsertEntryHashTable(uVar12,local_c0,pagedPool_policyEntryObject);
           if (-1 < (int)uVar7) {
             LOCK();
-            *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
+            *(int *)(pagedPool_policyEntryObject + 0x90) = *(int *)(pagedPool_policyEntryObject + 0x90) + 1;
             UNLOCK();
             plVar1 = (longlong *)(sharedPushLock + 0x10);
             local_d8 = '\x01';
@@ -112,14 +112,14 @@ LAB_0000688e:
               ExSetTimer(*(undefined8 *)(sharedPushLock + 0x20),0xffffffffee1e5d00,300000000);
             }
             puVar2 = *(undefined8 **)(sharedPushLock + 0x18);
-            plVar3 = (longlong *)(lVar8 + 0x40);
+            plVar3 = (longlong *)(pagedPool_policyEntryObject + 0x40);
             if ((longlong *)*puVar2 != plVar1) goto LAB_00006d58;
             *plVar3 = (longlong)plVar1;
-            *(undefined8 **)(lVar8 + 0x48) = puVar2;
+            *(undefined8 **)(pagedPool_policyEntryObject + 0x48) = puVar2;
             *puVar2 = plVar3;
             *(longlong **)(sharedPushLock + 0x18) = plVar3;
             LOCK();
-            *(undefined8 *)(lVar8 + 0x60) = _DAT_fffff78000000014;
+            *(undefined8 *)(pagedPool_policyEntryObject + 0x60) = _DAT_fffff78000000014;
             UNLOCK();
             goto LAB_00006a67;
           }
@@ -142,25 +142,25 @@ LAB_00006bb9:
     bVar6 = false;
     if ((int)uVar7 < 0) {
 LAB_00006be6:
-      if (lVar8 != 0) {
+      if (pagedPool_policyEntryObject != 0) {
 LAB_00006beb:
-        BfsDereferencePolicyEntryEx(lVar8,'\0');
+        BfsDereferencePolicyEntryEx(pagedPool_policyEntryObject,'\0');
       }
       if (local_d8 != '\0') {
         KeEnterCriticalRegion();
         ExAcquirePushLockExclusiveEx(sharedPushLock,0);
-        lVar8 = BfsLookupPolicyEntryHashTable
+        pagedPool_policyEntryObject = BfsLookupPolicyEntryHashTable
                           (*(undefined8 *)(sharedPushLock + 8),local_c0,local_d0,local_c8);
-        if (lVar8 == 0) {
+        if (pagedPool_policyEntryObject == 0) {
           ExReleasePushLockExclusiveEx(sharedPushLock,0);
           KeLeaveCriticalRegion();
         }
         else {
-          plVar1 = (longlong *)(lVar8 + 0x40);
-          *(undefined4 *)(lVar8 + 0x38) = 1;
+          plVar1 = (longlong *)(pagedPool_policyEntryObject + 0x40);
+          *(undefined4 *)(pagedPool_policyEntryObject + 0x38) = 1;
           lVar11 = *plVar1;
           if ((*(longlong **)(lVar11 + 8) != plVar1) ||
-             (plVar3 = *(longlong **)(lVar8 + 0x48), (longlong *)*plVar3 != plVar1)) {
+             (plVar3 = *(longlong **)(pagedPool_policyEntryObject + 0x48), (longlong *)*plVar3 != plVar1)) {
 LAB_00006d58:
             pcVar4 = (code *)swi(0x29);
             (*pcVar4)(3);
@@ -173,12 +173,12 @@ LAB_00006d58:
           uVar12 = Feature_Servicing_BfsGAFeature__private_IsEnabledDeviceUsageNoInline();
           if ((int)uVar12 != 0) {
             *plVar1 = 0;
-            *(undefined8 *)(lVar8 + 0x48) = 0;
+            *(undefined8 *)(pagedPool_policyEntryObject + 0x48) = 0;
           }
           ExReleasePushLockExclusiveEx(sharedPushLock);
           KeLeaveCriticalRegion();
-          KeSetEvent(*(undefined8 *)(lVar8 + 0x28),0,0);
-          BfsDereferencePolicyEntryEx(lVar8,'\0');
+          KeSetEvent(*(undefined8 *)(pagedPool_policyEntryObject + 0x28),0,0);
+          BfsDereferencePolicyEntryEx(pagedPool_policyEntryObject,'\0');
         }
       }
       if (bVar5) {
@@ -200,15 +200,15 @@ LAB_00006d58:
   }
   else {
     lVar9 = lVar10;
-    if ((*(uint *)(lVar8 + 0x38) >> 0x1c & 1) == 0) {
-      if (*(uint *)(lVar8 + 0x38) != 2) {
+    if ((*(uint *)(pagedPool_policyEntryObject + 0x38) >> 0x1c & 1) == 0) {
+      if (*(uint *)(pagedPool_policyEntryObject + 0x38) != 2) {
         uVar7 = 0xc0000001;
         goto LAB_0000690c;
       }
-      *(undefined4 *)(lVar8 + 0x38) = 0x10000001;
-      KeResetEvent(*(undefined8 *)(lVar8 + 0x28));
+      *(undefined4 *)(pagedPool_policyEntryObject + 0x38) = 0x10000001;
+      KeResetEvent(*(undefined8 *)(pagedPool_policyEntryObject + 0x28));
       LOCK();
-      *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
+      *(int *)(pagedPool_policyEntryObject + 0x90) = *(int *)(pagedPool_policyEntryObject + 0x90) + 1;
       UNLOCK();
 LAB_00006a67:
       ExReleasePushLockExclusiveEx(sharedPushLock,0);
@@ -231,10 +231,10 @@ LAB_00006a67:
             RtlFreeUnicodeString(&local_90);
             KeEnterCriticalRegion();
             ExAcquirePushLockExclusiveEx(sharedPushLock);
-            *(undefined8 *)(lVar8 + 0x30) = local_a8;
-            *(undefined4 *)(lVar8 + 0x38) = 0x10000000;
-            KeSetEvent(*(undefined8 *)(lVar8 + 0x28),0,0);
-            *param_7 = lVar8;
+            *(undefined8 *)(pagedPool_policyEntryObject + 0x30) = local_a8;
+            *(undefined4 *)(pagedPool_policyEntryObject + 0x38) = 0x10000000;
+            KeSetEvent(*(undefined8 *)(pagedPool_policyEntryObject + 0x28),0,0);
+            *policyEntryObject_frmArgs = pagedPool_policyEntryObject;
             goto LAB_00006bb9;
           }
         }
@@ -248,14 +248,14 @@ LAB_00006a67:
       goto LAB_00006be6;
     }
     LOCK();
-    *(int *)(lVar8 + 0x90) = *(int *)(lVar8 + 0x90) + 1;
+    *(int *)(pagedPool_policyEntryObject + 0x90) = *(int *)(pagedPool_policyEntryObject + 0x90) + 1;
     UNLOCK();
     ExReleasePushLockExclusiveEx(sharedPushLock);
     KeLeaveCriticalRegion();
-    if (*(int *)(lVar8 + 0x38) == 0x10000001) {
-      uVar13 = *(undefined8 *)(lVar8 + 0x28);
+    if (*(int *)(pagedPool_policyEntryObject + 0x38) == 0x10000001) {
+      uVar13 = *(undefined8 *)(pagedPool_policyEntryObject + 0x28);
       KeWaitForSingleObject(uVar13,0,0,0);
-      if (*(int *)(lVar8 + 0x38) != 0x10000000) {
+      if (*(int *)(pagedPool_policyEntryObject + 0x38) != 0x10000000) {
         if (3 < .data) {
           local_e0 = CONCAT44(local_e0._4_4_,0xc0000001);
           local_60 = &local_e0;
@@ -267,7 +267,7 @@ LAB_00006a67:
         goto LAB_00006beb;
       }
     }
-    *param_7 = lVar8;
+    *policyEntryObject_frmArgs = pagedPool_policyEntryObject;
   }
   __security_check_cookie(local_50 ^ (ulonglong)auStackY_118);
   return;
