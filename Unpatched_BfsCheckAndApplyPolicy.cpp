@@ -1,7 +1,7 @@
 
 void BfsCheckAndApplyPolicy
                (dword *dispatchObject,longlong param_2,dword *access_token,dword *flt_callback_data,
-               longlong *param_5)
+               longlong *bfs_fileInfoPolicyContext)
 
 {
   uint statusCode_garbage_collector;
@@ -84,24 +84,24 @@ LAB_00004ceb:
           if ((file_name_info == 0) &&
              (nt_status_var1 = FltGetFileNameInformation(flt_callback_data,0x101,&file_name_info),
              temp_saver_pointer = flt_callback_data, (int)nt_status_var1 < 0)) goto LAB_00004bd8;
-          fileNameInfo_local_var = *param_5;
+          fileNameInfo_local_var = *bfs_fileInfoPolicyContext;
           if (fileNameInfo_local_var != 0) {
 LAB_00004d54:
             *(undefined4 *)(fileNameInfo_local_var + 8) = 1;
             FltReferenceFileNameInformation(file_name_info);
-            *(longlong *)(*param_5 + 0x30) = file_name_info;
-            *(longlong *)(*param_5 + 0x40) = PolicyEntry;
+            *(longlong *)(*bfs_fileInfoPolicyContext + 0x30) = file_name_info;
+            *(longlong *)(*bfs_fileInfoPolicyContext + 0x40) = PolicyEntry;
             LOCK();
             *(int *)(PolicyEntry + 0x90) = *(int *)(PolicyEntry + 0x90) + 1;
             UNLOCK();
-            *(uint *)*param_5 = *(uint *)*param_5 | 1;
+            *(uint *)*bfs_fileInfoPolicyContext = *(uint *)*bfs_fileInfoPolicyContext | 1;
             PolicyEntry = deferredPolicyEntry;
             statusCode_garbage_collector = statusCode_garbage;
             goto LAB_00004d94;
           }
           temp_saver_pointer = &IMAGE_NT_HEADERS64_000000f0.FileHeader.NumberOfSymbols;
           fileNameInfo_local_var = ExAllocatePool2(0x100,0x58,0x43736642);
-          *param_5 = fileNameInfo_local_var;
+          *bfs_fileInfoPolicyContext = fileNameInfo_local_var;
           if (fileNameInfo_local_var != 0) goto LAB_00004d54;
           statusCode_garbage_collector = statusCode_garbage;
           if (.data < 4) goto LAB_00004d94;
@@ -135,7 +135,7 @@ LAB_00004cb8:
           nt_status_var1 =
                BfsApplyPolicyAsUser
                          ((longlong)flt_callback_data,(longlong)access_token,file_name_info,
-                          PolicyEntry,param_5);
+                          PolicyEntry,bfs_fileInfoPolicyContext);
           temp_saver_pointer = flt_callback_data;
           statusCode_garbage_collector = statusCode_garbage;
           if (-1 < (int)nt_status_var1) goto LAB_00004d94;
