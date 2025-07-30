@@ -11,7 +11,7 @@ void BfsGetPolicyEntry(dword *dispatchObject,undefined8 param_2,longlong sharedP
   longlong lVar4;
   undefined1 securityCookiePadding [32];
   longlong local_98;
-  longlong local_90;
+  longlong policyEntryObject;
   undefined8 local_88;
   longlong *local_60;
   undefined4 local_58;
@@ -30,12 +30,12 @@ void BfsGetPolicyEntry(dword *dispatchObject,undefined8 param_2,longlong sharedP
   KeEnterCriticalRegion();
   ExAcquirePushLockSharedEx(sharedPushLock,0);
   lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,token_origin_info_class);
-  local_90 = lVar4;
+  policyEntryObject = lVar4;
   if ((lVar4 == 0) || ((*(uint *)(lVar4 + 0x38) & 0x10000000) == 0)) {
     ExReleasePushLockSharedEx(sharedPushLock,0);
     KeLeaveCriticalRegion();
     iVar2 = BfsInsertPolicyEntry
-                      (dispatchObject,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)token_origin_info_class,&local_90)
+                      (dispatchObject,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)token_origin_info_class,&policyEntryObject)
     ;
     if (iVar2 < 0) {
       if (3 < .data) {
@@ -47,8 +47,8 @@ LAB_00005f7f:
         _tlgWriteTransfer_EtwWriteTransfer(dispatchObject,&DAT_00013c91);
       }
 LAB_00005fa7:
-      if (local_90 != 0) {
-        BfsDereferencePolicyEntryEx(local_90,'\0');
+      if (policyEntryObject != 0) {
+        BfsDereferencePolicyEntryEx(policyEntryObject,'\0');
       }
       goto LAB_00005fd5;
     }
@@ -72,9 +72,9 @@ LAB_00005fa7:
     }
   }
   LOCK();
-  *(undefined8 *)(local_90 + 0x60) = _DAT_fffff78000000014;
+  *(undefined8 *)(policyEntryObject + 0x60) = _DAT_fffff78000000014;
   UNLOCK();
-  *param_6 = local_90;
+  *param_6 = policyEntryObject;
 LAB_00005fd5:
   __security_check_cookie(cookie_check  ^ (ulonglong)securityCookiePadding);
   return;
