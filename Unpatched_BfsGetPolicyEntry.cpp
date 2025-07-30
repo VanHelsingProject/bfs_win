@@ -1,7 +1,7 @@
 
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong param_3,byte *param_4,
+void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong sharedPushLock,byte *token_user_info_class,
                       byte *param_5,longlong *param_6)
 
 {
@@ -21,21 +21,21 @@ void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong param_3,byte *
   cookie_check  = __security_cookie ^ (ulonglong)securityCookiePadding;
   local_98 = 0;
   local_88 = param_2;
-  uVar1 = RtlLengthSid(param_4);
-  BfsUpdateHash(param_4,uVar1,&local_98);
+  uVar1 = RtlLengthSid(token_user_info_class);
+  BfsUpdateHash(token_user_info_class,uVar1,&local_98);
   uVar1 = RtlLengthSid(param_5);
   BfsUpdateHash(param_5,uVar1,&local_98);
   uVar3 = BfsFinalHash(&local_98);
   *param_6 = 0;
   KeEnterCriticalRegion();
-  ExAcquirePushLockSharedEx(param_3,0);
-  lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(param_3 + 8),uVar3,param_4,param_5);
+  ExAcquirePushLockSharedEx(sharedPushLock,0);
+  lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,param_5);
   local_90 = lVar4;
   if ((lVar4 == 0) || ((*(uint *)(lVar4 + 0x38) & 0x10000000) == 0)) {
-    ExReleasePushLockSharedEx(param_3,0);
+    ExReleasePushLockSharedEx(sharedPushLock,0);
     KeLeaveCriticalRegion();
     iVar2 = BfsInsertPolicyEntry
-                      (param_1,local_88,param_3,uVar3,(longlong)param_4,(longlong)param_5,&local_90)
+                      (param_1,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)param_5,&local_90)
     ;
     if (iVar2 < 0) {
       if (3 < .data) {
@@ -57,7 +57,7 @@ LAB_00005fa7:
     LOCK();
     *(int *)(lVar4 + 0x90) = *(int *)(lVar4 + 0x90) + 1;
     UNLOCK();
-    ExReleasePushLockSharedEx(param_3);
+    ExReleasePushLockSharedEx(sharedPushLock);
     KeLeaveCriticalRegion();
     if (*(int *)(lVar4 + 0x38) == 0x10000001) {
       param_1 = *(dword **)(lVar4 + 0x28);
