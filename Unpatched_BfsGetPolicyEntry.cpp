@@ -1,7 +1,7 @@
 
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong sharedPushLock,byte *token_user_info_class,
+void BfsGetPolicyEntry(dword *dispatchObject,undefined8 param_2,longlong sharedPushLock,byte *token_user_info_class,
                       byte *token_origin_info_class,longlong *param_6)
 
 {
@@ -35,7 +35,7 @@ void BfsGetPolicyEntry(dword *param_1,undefined8 param_2,longlong sharedPushLock
     ExReleasePushLockSharedEx(sharedPushLock,0);
     KeLeaveCriticalRegion();
     iVar2 = BfsInsertPolicyEntry
-                      (param_1,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)token_origin_info_class,&local_90)
+                      (dispatchObject,local_88,sharedPushLock,uVar3,(longlong)token_user_info_class,(longlong)token_origin_info_class,&local_90)
     ;
     if (iVar2 < 0) {
       if (3 < .data) {
@@ -44,7 +44,7 @@ LAB_00005f7f:
         local_54 = 0;
         local_60 = &local_98;
         local_58 = 4;
-        _tlgWriteTransfer_EtwWriteTransfer(param_1,&DAT_00013c91);
+        _tlgWriteTransfer_EtwWriteTransfer(dispatchObject,&DAT_00013c91);
       }
 LAB_00005fa7:
       if (local_90 != 0) {
@@ -60,8 +60,8 @@ LAB_00005fa7:
     ExReleasePushLockSharedEx(sharedPushLock);
     KeLeaveCriticalRegion();
     if (*(int *)(lVar4 + 0x38) == 0x10000001) {
-      param_1 = *(dword **)(lVar4 + 0x28);
-      KeWaitForSingleObject(param_1,0,0,0);
+      dispatchObject = *(dword **)(lVar4 + 0x28);
+      KeWaitForSingleObject(dispatchObject,0,0,0);
       if (*(int *)(lVar4 + 0x38) != 0x10000000) {
         if (3 < .data) {
           local_98 = CONCAT44(local_98._4_4_,0xc0000001);
