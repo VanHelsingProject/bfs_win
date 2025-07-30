@@ -1,6 +1,6 @@
 
 void BfsCheckAndApplyPolicy
-               (dword *param_1,longlong param_2,dword *access_token,dword *flt_callback_data,
+               (dword *dispatchObject,longlong param_2,dword *access_token,dword *flt_callback_data,
                longlong *param_5)
 
 {
@@ -52,7 +52,7 @@ void BfsCheckAndApplyPolicy
       tempAccessToken = access_token;
       nt_status_var1 =
            BfsQueueDeferredWorkItemAndWait
-                     ((longlong)param_1,param_2,flt_callback_data,&tempAccessToken,
+                     ((longlong)dispatchObject,param_2,flt_callback_data,&tempAccessToken,
                       BfsQueryFileNameInformationCallback);
       file_name_info = deferredFileNameInfo;
     }
@@ -61,7 +61,7 @@ void BfsCheckAndApplyPolicy
     if (-1 < (int)nt_status_var1) {
       isBfsEntryExist =
            BfsPolicyEntryExists
-                     (param_1,param_2,0x16200,(byte *)*token_user_info_class,
+                     (dispatchObject,param_2,0x16200,(byte *)*token_user_info_class,
                       (byte *)*token_origin_info_class);
       if (isBfsEntryExist == 0) {
         temp_saver_pointer = (dword *)&gBfsPolicyTable;
@@ -118,10 +118,10 @@ LAB_00004d54:
           if (PolicyEntry == 0) {
 LAB_00004c37:
             nt_status_var1 =
-                 BfsGetPolicyEntry(param_1,param_2,0x16200,(byte *)*token_user_info_class,
+                 BfsGetPolicyEntry(dispatchObject,param_2,0x16200,(byte *)*token_user_info_class,
                                    (byte *)*token_origin_info_class,&deferredPolicyEntry);
             PolicyEntry = deferredPolicyEntry;
-            temp_saver_pointer = param_1;
+            temp_saver_pointer = dispatchObject;
             statusCode_garbage_collector = statusCode_garbage;
             if ((int)nt_status_var1 < 0) goto joined_r0x00004c71;
           }
@@ -150,9 +150,9 @@ LAB_00004bd8:
         statusCode_garbage_collector = statusCode_garbage;
       }
       else {
-        temp_saver_pointer = param_1;
+        temp_saver_pointer = dispatchObject;
         nt_status_var1 =
-             BfsGetPolicyEntry(param_1,param_2,0x16200,(byte *)*token_user_info_class,
+             BfsGetPolicyEntry(dispatchObject,param_2,0x16200,(byte *)*token_user_info_class,
                                (byte *)*token_origin_info_class,&deferredPolicyEntry);
         statusCode_garbage_collector = statusCode_garbage;
         if ((int)nt_status_var1 < 0) {
