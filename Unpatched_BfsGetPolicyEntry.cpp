@@ -8,7 +8,7 @@ void BfsGetPolicyEntry(dword *dispatchObject,undefined8 param_2,longlong sharedP
   uint uVar1;
   int iVar2;
   undefined8 uVar3;
-  longlong lVar4;
+  longlong hashTablePoolObject;
   undefined1 securityCookiePadding [32];
   longlong local_98;
   longlong policyEntryObject;
@@ -29,9 +29,9 @@ void BfsGetPolicyEntry(dword *dispatchObject,undefined8 param_2,longlong sharedP
   *param_6 = 0;
   KeEnterCriticalRegion();
   ExAcquirePushLockSharedEx(sharedPushLock,0);
-  lVar4 = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,token_origin_info_class);
-  policyEntryObject = lVar4;
-  if ((lVar4 == 0) || ((*(uint *)(lVar4 + 0x38) & 0x10000000) == 0)) {
+  hashTablePoolObject = BfsLookupPolicyEntryHashTable(*(undefined8 *)(sharedPushLock + 8),uVar3,token_user_info_class,token_origin_info_class);
+  policyEntryObject = hashTablePoolObject;
+  if ((hashTablePoolObject == 0) || ((*(uint *)(hashTablePoolObject + 0x38) & 0x10000000) == 0)) {
     ExReleasePushLockSharedEx(sharedPushLock,0);
     KeLeaveCriticalRegion();
     iVar2 = BfsInsertPolicyEntry
@@ -55,14 +55,14 @@ LAB_00005fa7:
   }
   else {
     LOCK();
-    *(int *)(lVar4 + 0x90) = *(int *)(lVar4 + 0x90) + 1;
+    *(int *)(hashTablePoolObject + 0x90) = *(int *)(hashTablePoolObject + 0x90) + 1;
     UNLOCK();
     ExReleasePushLockSharedEx(sharedPushLock);
     KeLeaveCriticalRegion();
-    if (*(int *)(lVar4 + 0x38) == 0x10000001) {
-      dispatchObject = *(dword **)(lVar4 + 0x28);
+    if (*(int *)(hashTablePoolObject + 0x38) == 0x10000001) {
+      dispatchObject = *(dword **)(hashTablePoolObject + 0x28);
       KeWaitForSingleObject(dispatchObject,0,0,0);
-      if (*(int *)(lVar4 + 0x38) != 0x10000000) {
+      if (*(int *)(hashTablePoolObject + 0x38) != 0x10000000) {
         if (3 < .data) {
           local_98 = CONCAT44(local_98._4_4_,0xc0000001);
           goto LAB_00005f7f;
